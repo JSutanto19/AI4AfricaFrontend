@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -10,6 +10,14 @@ import HomeScreen from '../screens/HomeScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AddPostScreen from '../screens/AddPostScreen';
+import MessageScreen from '../screens/MessageScreen';
+import SignupScreen from '../screens/SignupScreen';
+import LoginScreen from '../screens/LoginScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,7 +92,98 @@ const FeedStack = ({navigation}) => (
     </Stack.Navigator>
   );
 
-  const AppStack = () =>{
+  const MessageStack = ({navigation}) => (
+      <Stack.Navigator>
+          <Stack.Screen name="Messages" component={MessageScreen}/>
+          <Stack.Screen 
+          name="Chat" 
+          component={ChatScreen}
+          options={({route}) => ({
+              title: route.params.userName,
+              headerBackTitleVisible: false
+            })}          
+          />
+      </Stack.Navigator>
+  );
+
+  const AuthStack = ({navigation}) => {
+    const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+    let routeName;
+  
+    useEffect(() => {
+      AsyncStorage.getItem('alreadyLaunched').then((value) => {
+        if (value == null) {
+          AsyncStorage.setItem('alreadyLaunched', 'true'); // No need to wait for `setItem` to finish, although you might want to handle errors
+          setIsFirstLaunch(true);
+        } else {
+          setIsFirstLaunch(false);
+        }
+      }); // Add some error handling, also you can simply do setIsFirstLaunch(null)
+    
+    }, []);
+  
+    if (isFirstLaunch === null) {
+      return null; // This is the 'tricky' part: The query to AsyncStorage is not finished, but we have to present something to the user. Null will just render nothing, so you can also put a placeholder of some sort, but effectively the interval between the first mount and AsyncStorage retrieving your data won't be noticeable to the user. But if you want to display anything then you can use a LOADER here
+    } else if (isFirstLaunch == true) {
+      routeName = 'Onboarding';
+    } else {
+      routeName = 'Login';
+    }
+  
+    return (
+      <Stack.Navigator initialRouteName={routeName}>
+        <Stack.Screen
+          name="Onboarding"
+          component={OnboardingScreen}
+          options={{header: () => null}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{header: () => null}}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={({navigation}) => ({
+            title: '',
+            headerStyle: {
+              backgroundColor: '#f9fafd',
+              shadowColor: '#f9fafd',
+              elevation: 0,
+            },
+            headerLeft: () => (
+              <View style={{marginLeft: 10}}>
+                <FontAwesome.Button 
+                  name="long-arrow-left"
+                  size={25}
+                  backgroundColor="#f9fafd"
+                  color="#333"
+                  onPress={() => navigation.navigate('Login')}
+                />
+              </View>
+            ),
+          })}
+        />
+      </Stack.Navigator>
+    );
+  };
+  
+
+  
+
+  const AppTabs = () =>{
+
+      const getTabBarVisibility = (route)=>{
+          const routeName = route.state ? route.state.routes[route.state.index].name : '';
+          
+          if(routeName === "Chat" ){
+              return false;
+          }
+
+          return true;
+      }
+
      return(
             <Tab.Navigator
               tabBarOptions={{
@@ -107,12 +206,13 @@ const FeedStack = ({navigation}) => (
               />
               <Tab.Screen
                 name="Messages"
-                component={ChatScreen}
-                options={{
+                component={MessageStack}
+                options={({route}) => ({
+                    tabBarVisible: getTabBarVisibility(route),
                     tabBarIcon: ({color, size}) => (
                       <Ionicons name="chatbox-ellipses-outline" color={color} size={size} />
                     ),
-                }}
+                })}
               />
               <Tab.Screen
                 name="Profile"
@@ -126,6 +226,15 @@ const FeedStack = ({navigation}) => (
               />
             </Tab.Navigator>
      );
+  }
+
+  const AppStack = ({navigation}) => {
+    return(
+        <Stack.Navigator>
+            <Stack.Screen name="Login" component={AuthStack} />
+            <Stack.Screen options={{headerShown: false}} name="TabNav" component={AppTabs}/>
+        </Stack.Navigator>
+    );   
   }
 
   export default AppStack;

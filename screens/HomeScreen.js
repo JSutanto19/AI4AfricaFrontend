@@ -5,7 +5,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Container} from '../styles/FeedStyles';
 
 import PostCard from '../components/PostCard';
-// import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 
 const Posts = [
     {
@@ -73,9 +72,10 @@ const Posts = [
 const HomeScreen = () => {
     return (
         <Container>
-
-            <FlatList data={Posts} renderItem={({item}) => <PostCard item={item}/>} keyExtractor={item => item.id}/>
-
+            <FlatList data={Posts} 
+            renderItem={({item})=> <PostCard item={item}/>} 
+            keyExtractor={item => item.id} 
+            showsVerticalScrollIndicator={false}/>
         </Container>
     )
 }

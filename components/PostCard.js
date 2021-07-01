@@ -15,15 +15,16 @@ const PostCard = ({item}) =>{
         <Card>
         <UserInfo>
             <UserInfo>
-                <UserImg source={require('../assets/users/user-1.jpg')}/>
+                <UserImg source={item.userImg}/>
                 <UserInfoText>
-                    <UserName>John Doe</UserName>
-                    <PostTime>5 hours ago</PostTime>
+                    <UserName>{item.userName}</UserName>
+                    <PostTime>{item.postTime}</PostTime>
                 </UserInfoText>
             </UserInfo>
         </UserInfo>
-        <PostText>This is a text which showcases how it will look in the UI. This is the second post</PostText>
-        <Divider/>
+        <PostText>{item.post}</PostText>
+        {item.postImg != 'none' ? <PostImg source={item.postImg}/> : <Divider/>}
+        
         <InteractionWrapper>
             <Interaction  active>
                 <Ionicons name="heart-outline" size={25}/>

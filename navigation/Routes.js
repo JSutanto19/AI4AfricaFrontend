@@ -7,8 +7,8 @@ import AppStack from './AppStack';
 const Routes = () => {
     return(
         <NavigationContainer>
-            <AppStack/>
-        </NavigationContainer>
+          <AppStack />      
+       </NavigationContainer>
     );
 }
 

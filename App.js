@@ -221,6 +221,7 @@
 
 import React , {useState} from 'react';
 import Providers from './navigation';
+//import * as firebase from 'firebase';
 import * as firebase from 'firebase';
 
 var firebaseConfig = {
@@ -250,6 +251,3 @@ const App = () => {
 }
 
 export default App;
-
-
-

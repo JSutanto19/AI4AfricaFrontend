@@ -4,35 +4,53 @@ import {Image,Text,StyleSheet, View, TouchableOpacity} from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
-import * as firebase from 'firebase';
-
+import {AuthContext} from '../navigation/AuthProvider';
 
 const LoginScreen = ({navigation}) =>{
 
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const handleLogin = () =>{
-    firebase.auth().signInWithEmailAndPassword(email,password).then(navigation.navigate("Onboarding")).catch(alert("login failed"));
-  }
+  const {login} = useContext(AuthContext);
+  
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Image
+        source={require('../assets/rn-social-logo.png')}
+        style={styles.logo}
+      />
+      <Text style={styles.text}>RN Social App</Text>
 
-  return(
-    <View style={styles.container}>
-       <Image source={require('../assets/rn-social-logo.png')} style={styles.logo}/>
-       <Text style={styles.text}>AI4Africa Social App</Text>
-       <FormInput labelValue={email} onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Email" iconType="user" keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
-       />
-       <FormInput labelValue={password} onChangeText={(userPassowrd) => setPassword(userPassowrd)}
-        placeholderText="Password" iconType="lock" secureTextEntry={true}
-       />
-       <FormButton buttonTitle="Sign In" onPress={() => handleLogin()}/>
+      <FormInput
+        // replacing placeholder with user email
+        labelValue={email}
+        onChangeText={(userEmail) => setEmail(userEmail)}
+        placeholderText="Email"
+        iconType="user"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
 
-       <TouchableOpacity style={styles.forgotButton} onPress={() => alert("Forgot Password clicked!")}>
-          <Text style={styles.navButtonText}> Forgot Password?</Text>
-       </TouchableOpacity>
+      <FormInput
+        // replacing placeholder with user password
+        labelValue={password}
+        onChangeText={(userPassword) => setPassword(userPassword)}
+        placeholderText="Password"
+        iconType="lock"
+        secureTextEntry={true}
+      />
 
-       <SocialButton
+      <FormButton
+        buttonTitle="Sign In"
+        onPress={() => login(email, password)}
+      />
+
+      <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
+        <Text style={styles.navButtonText}>Forgot Password?</Text>
+      </TouchableOpacity>
+
+      <SocialButton
             buttonTitle="Sign In with Facebook"
             btnType="facebook"
             color="#4867aa"
@@ -48,17 +66,19 @@ const LoginScreen = ({navigation}) =>{
             onPress={() => alert("Google Login clicked")}
           />
 
-
-       <TouchableOpacity style={styles.forgotButton} onPress={() => navigation.navigate('Signup')}>
-          <Text style={styles.navButtonText}> Don't have and account. Create here</Text>
-       </TouchableOpacity>
-
-    </View>
+      <TouchableOpacity
+        style={styles.forgotButton}
+        onPress={() => navigation.navigate('Signup')}>
+        <Text style={styles.navButtonText}>
+          Don't have an acount? Create here
+        </Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
+  
 }
 
 export default LoginScreen;
-
 
 const styles = StyleSheet.create({
   container: {

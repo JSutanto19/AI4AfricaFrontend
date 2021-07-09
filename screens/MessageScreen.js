@@ -1,5 +1,6 @@
-import React from 'react'
-import { View, Text,StyleSheet, Button, FlatList } from 'react-native';
+import React, {useState, useEffect} from 'react';
+
+import { View, Text, StyleSheet, Button, FlatList } from 'react-native';
 import { InteractionText } from '../styles/FeedStyles';
 import { Container,
     Card,
@@ -11,7 +12,11 @@ import { Container,
     PostTime,
     MessageText,
     TextSection,
-} from '../styles/MessageStyles'
+} from '../styles/MessageStyles';
+ 
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import MessageCard from '../components/MessageCard'
 
 const Messages = [
     {
@@ -57,28 +62,31 @@ const Messages = [
   ];
 
 const MessageScreen = ({navigation}) => {
+   const [chats, setChats] = useState([]);
+
+   const db = firebase.firestore();
+
+   const enterChat = (id, chatName) => {
+     navigation.navigate('Chat', {
+       id, chatName});
+   }
+
+   useEffect(() => {
+      const unSubscribe = db.collection('createdChats').onSnapshot(snapshot => (
+        setChats(snapshot.docs.map(doc => ({
+           id: doc.id,
+           data: doc.data()
+        })))
+      ));
+      return unSubscribe;
+   }, []);
+
     return (
         <Container style={styles.container}>
-            <FlatList
-              data={Messages}
-              keyExtractor={item => item.id}
-              renderItem = { ({item}) => (
-                  <Card onPress={()=> navigation.navigate('Chat' , {userName: item.userName})}>
-                      <UserInfo>
-                          <UserImgWrapper>
-                              <UserImg source={item.userImg}/>
-                          </UserImgWrapper>
-                          <TextSection>
-                              <UserInfoText>
-                                  <UserName>{item.userName}</UserName>
-                                  <PostTime>{item.messageTime}</PostTime>
-                              </UserInfoText>
-                              <MessageText>{item.messageText}</MessageText>
-                          </TextSection>
-                      </UserInfo>
-                  </Card>
-              )}
-            />
+             {chats.map(({id, data: {chatName}}) => (
+                <MessageCard key={id} id={id} chatName={chatName} navigation={navigation} enterChat={enterChat}/>
+            ))}
+           
         </Container>
     )
 }
@@ -89,8 +97,8 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: '#fff',
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      // justifyContent: 'center',
+      // alignItems: 'center',
       padding: 20,
     },
   }    

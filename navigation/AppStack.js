@@ -14,10 +14,15 @@ import MessageScreen from '../screens/MessageScreen';
 import SignupScreen from '../screens/SignupScreen';
 import LoginScreen from '../screens/LoginScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import AddChatScreen from '../screens/AddChatScreen';
+import ExploreScreen from '../screens/ExplorePage';
+import TranslateScreen from '../screens/TranslateScreen';
+
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -94,7 +99,43 @@ const FeedStack = ({navigation}) => (
 
   const MessageStack = ({navigation}) => (
       <Stack.Navigator>
-          <Stack.Screen name="Messages" component={MessageScreen}/>
+          <Stack.Screen name="Messages" component={MessageScreen}
+             options={{
+                headerRight: () => (
+                    <View style={{marginRight: 10}}>
+                      <FontAwesome5.Button
+                        name="edit"
+                        size={22}
+                        backgroundColor="#fff"
+                        color="#2e64e5"
+                        onPress={() => navigation.navigate('AddChat')}
+                      />
+                    </View>
+                ),
+                headerTitleStyle: {
+                    color: '#2e64e5',
+                    fontFamily: 'Cochin',
+                    fontSize: 18,
+                  },
+              }}
+          />
+          <Stack.Screen name="AddChat" component={AddChatScreen}
+            options={{
+                title: '',
+                headerTitleAlign: 'center',
+                headerStyle: {
+                  backgroundColor: '#2e64e515',
+                  shadowColor: '#2e64e515',
+                  elevation: 0,
+                },
+                headerBackTitle: "Messages",
+                headerBackImage: () => (
+                  <View style={{marginLeft: 15}}>
+                    <Ionicons name="arrow-back" size={25} color="#2e64e5" />
+                  </View>
+                ),
+              }}
+          />
           <Stack.Screen 
           name="Chat" 
           component={ChatScreen}
@@ -105,7 +146,27 @@ const FeedStack = ({navigation}) => (
           />
       </Stack.Navigator>
   );
-
+  
+  const ExploreStack = ({navigation}) => (
+      <Stack.Navigator>
+           <Stack.Screen name="Explore" component={ExploreScreen} options={{
+               headerTitleStyle: {
+                color: '#2e64e5',
+                fontFamily: 'Cochin',
+                fontSize: 18,
+              },
+              headerBackTitleVisible: false,
+           }}/>
+           <Stack.Screen name="Translate" component={TranslateScreen} options={{
+               headerTitleStyle: {
+                color: '#2e64e5',
+                fontFamily: 'Cochin',
+                fontSize: 18,
+              },
+              headerBackTitleVisible: false,
+           }}/>
+      </Stack.Navigator>
+  );
   const AuthStack = ({navigation}) => {
     const [isFirstLaunch, setIsFirstLaunch] = useState(null);
     let routeName;
@@ -190,6 +251,16 @@ const FeedStack = ({navigation}) => (
                 activeTintColor: '#2e64e5',
               }}>
               <Tab.Screen
+                name="Messages"
+                component={MessageStack}
+                options={({route}) => ({
+                    tabBarVisible: getTabBarVisibility(route),
+                    tabBarIcon: ({color, size}) => (
+                      <Ionicons name="chatbox-ellipses-outline" color={color} size={size} />
+                    ),
+                })}
+              />
+              <Tab.Screen
                 name="Home"
                 component={FeedStack}
                 options={({route}) => ({
@@ -205,16 +276,6 @@ const FeedStack = ({navigation}) => (
                 })}
               />
               <Tab.Screen
-                name="Messages"
-                component={MessageStack}
-                options={({route}) => ({
-                    tabBarVisible: getTabBarVisibility(route),
-                    tabBarIcon: ({color, size}) => (
-                      <Ionicons name="chatbox-ellipses-outline" color={color} size={size} />
-                    ),
-                })}
-              />
-              <Tab.Screen
                 name="Profile"
                 component={ProfileScreen}
                 options={{
@@ -224,6 +285,20 @@ const FeedStack = ({navigation}) => (
                   ),
                 }}
               />
+
+
+            <Tab.Screen
+                name="Explore"
+                component={ExploreStack}
+                options={{
+                  // tabBarLabel: 'Home',
+                  tabBarIcon: ({color, size}) => (
+                    <Ionicons name="earth-outline" color={color} size={size} />
+                  ), 
+                }}
+              />
+
+            
             </Tab.Navigator>
      );
   }

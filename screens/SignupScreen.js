@@ -4,30 +4,42 @@ import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import CancelButton from '../components/CancelButton';
 import * as firebase from 'firebase';
+import 'firebase/firestore';
+
 
 const SignupScreen = ({navigation}) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [name, setName] = useState();
 
     const handleSignup = () => {
       firebase.auth()
       .createUserWithEmailAndPassword(email,password)
-      .then(alert("Navigate to home screen"))
-      .catch(alert("Sign up failed"));
+      .then((result) =>{
+        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(
+          email, password, name
+        )
+      })
+      //.catch(error);
     }
 
    return(
      <View style={styles.container}>
          <Text style={styles.text}> Create an Account</Text>
          <FormInput labelValue={email} onChangeText={(userEmail) => setEmail(userEmail)}
-          placeholderText="Email" iconType="user" keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
+          placeholderText="Email" iconType="mail" keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
          />
          <FormInput labelValue={password} onChangeText={(userPassowrd) => setPassword(userPassowrd)}
-        placeholderText="Password" iconType="lock" secureTextEntry={true}
-       />
-       <FormInput labelValue={password} onChangeText={(userPassowrd) => setPassword(userPassowrd)}
-        placeholderText="Confirm Password" iconType="lock" secureTextEntry={true}
-       />
+          placeholderText="Password" iconType="lock" secureTextEntry={true}
+        />
+       
+        <FormInput labelValue={password} onChangeText={(userPassowrd) => setPassword(userPassowrd)}
+          placeholderText="Confirm Password" iconType="lock" secureTextEntry={true}
+        />
+
+        <FormInput labelValue={name} onChangeText={(usersName) => setName(usersName)}
+        placeholderText="Name" iconType="user" autoCorrect={false}
+        />
 
         <FormButton buttonTitle="Sign Up" onPress={()=> {handleSignup()}}/>
         <CancelButton buttonTitle="Cancel" onPress={()=> navigation.navigate("Login")}/>

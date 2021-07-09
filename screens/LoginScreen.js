@@ -13,20 +13,20 @@ const LoginScreen = ({navigation}) =>{
   const [password, setPassword] = useState();
 
   const handleLogin = () =>{
-    firebase.auth().signInWithEmailAndPassword(email,password).then(navigation.navigate("Onboarding")).catch(alert("login failed"));
+    firebase.auth().signInWithEmailAndPassword(email,password).then(navigation.navigate("Onboarding"));//.catch(error);
   }
 
   return(
     <View style={styles.container}>
        <Image source={require('../assets/rn-social-logo.png')} style={styles.logo}/>
-       <Text style={styles.text}>AI4Africa Social App</Text>
+       <Text style={styles.text}>BASE</Text>
        <FormInput labelValue={email} onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Email" iconType="user" keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
+        placeholderText="Email" iconType="mail" keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
        />
        <FormInput labelValue={password} onChangeText={(userPassowrd) => setPassword(userPassowrd)}
         placeholderText="Password" iconType="lock" secureTextEntry={true}
        />
-       <FormButton buttonTitle="Sign In" onPress={() => handleLogin()}/>
+       <FormButton buttonTitle="Sign In" onPress={handleLogin}/>
 
        <TouchableOpacity style={styles.forgotButton} onPress={() => alert("Forgot Password clicked!")}>
           <Text style={styles.navButtonText}> Forgot Password?</Text>

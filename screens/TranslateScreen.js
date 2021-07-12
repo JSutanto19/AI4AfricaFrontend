@@ -2,7 +2,49 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+//import fetch from 'node-fetch';
+/*
+const API_TOKEN = "api_XjRRyCXAXqfXdhYMTqqxjAkqtLCrlhWVJu";
+const fetch = require("node-fetch");
+const url = "https://api-inference.huggingface.co/models/gpt2";
+async function query(data) {
+    const response = await fetch(
+        url,
+        {
+            headers: { Authorization: `Bearer ${API_TOKEN}` },
+            method: "POST",
+            body: JSON.stringify(data),
+        }
+    );
+    const result = await response.json();
+    return result;
+}
 
+query("Can you please let us know more details about your ").then((response) => {
+    console.log(JSON.stringify(response));
+});
+
+// [{"generated_text":"Can you please let us know more details about your iphone's storage 
+// capacity and/or processor? I will include this with your list of your devices that use your
+// hard drive. It shows your current/past usage of the device(s)"}]
+*/
+
+const data = "Can you please let us know more details about your ";
+const API_TOKEN = "api_XjRRyCXAXqfXdhYMTqqxjAkqtLCrlhWVJu";
+const url = "https://api-inference.huggingface.co/models/gpt2";
+const axios = require('axios').default;
+
+const config = {
+    headers: { Authorization: `Bearer ${API_TOKEN}` }
+};
+
+axios.post("https://api-inference.huggingface.co/models/gpt2", data, config)
+    .then(function (response) {
+        console.log(response.data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 
 
 const TranslateScreen = () => {

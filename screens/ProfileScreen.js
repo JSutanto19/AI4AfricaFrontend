@@ -26,7 +26,7 @@ const ProfileScreen = ({navigation}) => {
   // });
 
   const handleSignout = () => {
-     firebase.auth().signOut().then(Alert.alert("Navigate to Login Screen")).catch(error => Alert.alert(error))
+     firebase.auth().signOut().then(navigation.navigate('Login')).catch(error => Alert.alert(error))
   }
 
     return (

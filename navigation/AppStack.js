@@ -328,7 +328,7 @@ const FeedStack = ({navigation}) => (
   const AppStack = ({navigation}) => {
     return(
         <Stack.Navigator>
-            <Stack.Screen name="Login" component={AuthStack} />
+            <Stack.Screen name="Login" component={AuthStack} options={{headerLeft:null}} />
             <Stack.Screen options={{headerShown: false}} name="TabNav" component={AppTabs}/>
         </Stack.Navigator>
     );   

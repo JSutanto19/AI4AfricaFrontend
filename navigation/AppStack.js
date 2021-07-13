@@ -17,6 +17,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import AddChatScreen from '../screens/AddChatScreen';
 import ExploreScreen from '../screens/ExplorePage';
 import TranslateScreen from '../screens/TranslateScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -167,6 +168,7 @@ const FeedStack = ({navigation}) => (
            }}/>
       </Stack.Navigator>
   );
+
   const AuthStack = ({navigation}) => {
     const [isFirstLaunch, setIsFirstLaunch] = useState(null);
     let routeName;
@@ -230,7 +232,27 @@ const FeedStack = ({navigation}) => (
     );
   };
   
-
+  
+   const ProfileStack = ({navigation}) => (
+      <Stack.Navigator>
+           <Stack.Screen name="Profile" component={ProfileScreen} options={{
+               headerTitleStyle: {
+                color: '#2e64e5',
+                fontFamily: 'Cochin',
+                fontSize: 18,
+              },
+              headerBackTitleVisible: false,
+           }}/>
+           <Stack.Screen name="Edit Profile" component={EditProfileScreen} options={{
+               headerTitleStyle: {
+                color: '#2e64e5',
+                fontFamily: 'Cochin',
+                fontSize: 18,
+              },
+              headerBackTitleVisible: false,
+           }}/>
+      </Stack.Navigator>
+  );
   
 
   const AppTabs = () =>{
@@ -277,7 +299,7 @@ const FeedStack = ({navigation}) => (
               />
               <Tab.Screen
                 name="Profile"
-                component={ProfileScreen}
+                component={ProfileStack}
                 options={{
                   // tabBarLabel: 'Home',
                   tabBarIcon: ({color, size}) => (

@@ -1,18 +1,18 @@
 import React, {useState}from 'react'
-import { View, Text, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
 import {InputWrapper, InputField, AddImage, StatusWrapper, SubmitBtn, SubmitBtnText} from '../styles/AddPost';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ImagePicker} from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 
 
 
-const AddPostScreen = () => {
+const AddPostScreen = ({navigation}) => {
    
-  const [pickedImagePath, setPickedImagePath] = useState('');
+  const [pickedImagePath, setPickedImagePath] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
   const [post, setPost] = useState(null);
@@ -30,12 +30,9 @@ const AddPostScreen = () => {
 
     const result = await ImagePicker.launchImageLibraryAsync();
 
-    // Explore the result
-    console.log(result);
-
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
-      console.log(result.uri);
+      // uploadImage(result.uri).then(()=> Alert.alert('sucess')).catch((error) => Alert.alert(error));
     }
   }
   
@@ -44,97 +41,71 @@ const AddPostScreen = () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert("You've refused to allow this app to access your camera!");
       return;
     }
 
     const result = await ImagePicker.launchCameraAsync();
 
-    // Explore the result
-    console.log(result);
-
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
       console.log(result.uri);
+      // uploadImage(result.uri, 'test-image').then(()=> Alert.alert('sucess')).catch((error) => Alert.alert(error));
     }
   }
 
+
   const submitPost = async () => {
-    const imageUrl = await uploadImage();
-    console.log('Image Url: ', imageUrl);
-    console.log('Post: ', post);
+    const imageUrl = await uploadImage(pickedImagePath);
+    alert(imageUrl);
+
+    if(imageUrl !== null){
+      // imageUrl = pickedImagePath; 
+      const url = pickedImagePath;
+    }
+
 
     firebase.firestore()
     .collection('posts')
     .add({
       userId: firebase.auth().currentUser.uid,
       post: post,
-      postImg: imageUrl,
+      postImg: pickedImagePath,
       postTime: firebase.firestore.FieldValue.serverTimestamp(),
       likes: null,
       comments: null,
     })
     .then(() => {
+      alert("Here");
       console.log('Post Added!');
       alert(
         'Post published!',
         'Your post has been published Successfully!',
       );
       setPost(null);
+      navigation.navigate("RN Social",{added: true})
     })
     .catch((error) => {
       console.log('Something went wrong with added post to firestore.', error);
     });
   }
 
-  const uploadImage = async () => {
+  const uploadImage = async (uri) => {
 
-    if( pickedImagePath == '' ) {
+    if(uri == null){
       return null;
     }
 
-    const uploadUri = pickedImagePath;
-    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+    const imageName = "image-" + Math.floor(Math.random() * 10000).toString();
 
-    // Add timestamp to File Name
-    const extension = filename.split('.').pop(); 
-    const name = filename.split('.').slice(0, -1).join('.');
-    filename = name + Date.now() + '.' + extension;
+    const response = await fetch(uri);
+    const blob = await response.blob();
 
-    setUploading(true);
-    setTransferred(0);
+    var ref = firebase.storage().ref().child("images/" + imageName);
+    return ref.put(blob);
+  }
 
-    const storageRef = firebase.storage().ref(`photos/${filename}`);
-    const task = storageRef.putFile(uploadUri);
-
-    // Set transferred state
-    task.on('state_changed', (taskSnapshot) => {
-      console.log(
-        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-      );
-
-      setTransferred(
-        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-          100,
-      );
-    });
-
-    try {
-      await task;
-
-      const url = await storageRef.getDownloadURL();
-
-      setUploading(false);
-      setPickedImagePath(null);
-
-      return url;
-
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
-
-  };
+  
 
     return (
         <View style={styles.container}>
@@ -154,12 +125,13 @@ const AddPostScreen = () => {
                 <ActivityIndicator size="large" color="#0000ff" />
               </StatusWrapper>
             ) : (
-              <SubmitBtn style={{marginTop: 25}}onPress={submitPost}>
+              <SubmitBtn style={{marginTop: 25}} onPress={submitPost}>
                 <SubmitBtnText>Post</SubmitBtnText>
               </SubmitBtn>
             )}
 
           </InputWrapper>
+
           <ActionButton buttonColor="rgba(231,76,60,1)">
           <ActionButton.Item buttonColor='#9b59b6' title="Take Photo" onPress={openCamera}>
             <Icon name="camera-outline" style={styles.actionButtonIcon} />
@@ -189,3 +161,4 @@ const styles = StyleSheet.create({
     }
   }    
 );
+

@@ -73,14 +73,15 @@ const Posts = [
     },
   ];
 
-const HomeScreen = () => {
+const HomeScreen = ({route, navigation}) => {
 
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleted, setDeleted] = useState(false);
   const [created, setCreated] = useState(false);
-
-
+  const [seconds, setSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);  
+  
   
   const fetchPosts = async () => {
 
@@ -121,20 +122,42 @@ const HomeScreen = () => {
   }
 
   useEffect(() => {
-
     fetchPosts();
     
-  },[])
+  }, [])
 
   useEffect(() => {
      fetchPosts();
      setDeleted(false);
   }, [deleted])
 
-  useEffect(() => {
-    fetchPosts();
-    setDeleted(false);
- }, [created])
+  // useEffect(() => {
+
+  //   // console.log('in timed useeffect')
+  //   setTimeout(() => {
+  //     setSeconds(seconds + 1);
+  //   }, 1000);
+  //   fetchPosts()
+
+  // }, [seconds]);
+
+  
+
+  // useEffect(() => {
+  //   console.log('in useEffect');
+  //   let interval = null;
+  //   setIsActive(true);
+  //   if (isActive) {
+  //     interval = setInterval(() => {
+  //       setSeconds(seconds => seconds + 1);
+  //     }, 1);
+  //   } else if (!isActive && seconds !== 0) {
+  //     clearInterval(interval);
+  //   }
+  //   fetchPosts();
+  //   return () => clearInterval(interval);
+  //   setIsActive(false);
+  // }, [isActive, seconds]);
 
   const handleDelete = (postId) => {
     Alert.alert(
@@ -156,7 +179,7 @@ const HomeScreen = () => {
   };
 
   const deletePost = (postId) => {
-    console.log('Current Post Id: ', postId);
+    // console.log('Current Post Id: ', postId);
 
     firebase.firestore()
       .collection('posts')

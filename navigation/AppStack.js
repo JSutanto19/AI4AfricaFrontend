@@ -18,6 +18,7 @@ import AddChatScreen from '../screens/AddChatScreen';
 import ExploreScreen from '../screens/ExplorePage';
 import TranslateScreen from '../screens/TranslateScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import ChatBotScreen from '../screens/ChatBotScreen';
 
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -159,6 +160,14 @@ const FeedStack = ({navigation}) => (
               headerBackTitleVisible: false,
            }}/>
            <Stack.Screen name="Translate" component={TranslateScreen} options={{
+               headerTitleStyle: {
+                color: '#2e64e5',
+                fontFamily: 'Cochin',
+                fontSize: 18,
+              },
+              headerBackTitleVisible: false,
+           }}/>
+           <Stack.Screen name="ChatBot" component={ChatBotScreen} options={{
                headerTitleStyle: {
                 color: '#2e64e5',
                 fontFamily: 'Cochin',
@@ -326,6 +335,7 @@ const FeedStack = ({navigation}) => (
   }
 
   const AppStack = ({navigation}) => {
+
     return(
         <Stack.Navigator>
             <Stack.Screen name="Login" component={AuthStack} options={{headerLeft:null}} />

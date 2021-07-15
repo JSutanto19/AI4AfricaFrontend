@@ -52,6 +52,7 @@ const PostCard = ({item, onDelete}) => {
         </UserInfo>
         <PostText>{item.post}</PostText>
         {item.postImg != null ? <PostImg source={{uri: item.postImg}}/> : <Divider/>}
+
         
         <InteractionWrapper>
             <Interaction  active={item.liked}>

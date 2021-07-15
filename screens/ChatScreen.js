@@ -97,6 +97,24 @@ const ChatScreen = ({navigation, route}) => {
         />   
       );
   }
+
+  // const chatID = () => {
+  //   const chatterID = this.props.authUser.uid;
+  //   const chateeID = this.chateeUID;
+  //   const chatIDpre = [];
+  //   chatIDpre.push(chatterID);
+  //   chatIDpre.push(chateeID);
+  //   chatIDpre.sort();
+  //   return chatIDpre.join('_');
+  // };
+
+  // const sendChatMessage = (chatID, chat) => {
+  //   return db
+  //     .collection('messages')
+  //     .doc(chatID)
+  //     .collection('chats')
+  //     .add(chat);
+  // };
   
   const renderSend = (props) => {
       return(

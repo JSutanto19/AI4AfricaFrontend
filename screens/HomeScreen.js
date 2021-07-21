@@ -24,18 +24,7 @@ const Posts = [
       likes: '14',
       comments: '5',
     },
-    {
-      id: '2',
-      userName: 'John Doe',
-      userImg: require('../assets/users/user-1.jpg'),
-      postTime: '2 hours ago',
-      post:
-        'Hey there, this is my test for a post of my social app in React Native.',
-      postImg: 'none',
-      liked: false,
-      likes: '8',
-      comments: '0',
-    },
+    
     {
       id: '3',
       userName: 'Ken William',
@@ -60,17 +49,7 @@ const Posts = [
       likes: '22',
       comments: '4',
     },
-    {
-      id: '5',
-      userName: 'Christy Alex',
-      userImg: require('../assets/users/user-7.jpg'),
-      postTime: '2 days ago',
-      post: 'Hey there, this is my test for a post of my social app in React Native.',
-      postImg: 'none',
-      liked: false,
-      likes: '0',
-      comments: '0',
-    },
+
   ];
 
 const HomeScreen = ({route, navigation}) => {
@@ -227,7 +206,7 @@ const HomeScreen = ({route, navigation}) => {
 
     return (
         <Container>
-            <FlatList data={posts} 
+            <FlatList data={Posts} 
             renderItem={({item})=> <PostCard item={item} onDelete={handleDelete}/>} 
             keyExtractor={item => item.id} 
             showsVerticalScrollIndicator={false}/>

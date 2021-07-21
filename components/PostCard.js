@@ -43,15 +43,18 @@ const PostCard = ({item, onDelete}) => {
         <Card>
         <UserInfo>
             <UserInfo>
-                <UserImg source={{uri: item.userImg}}/>
+                <UserImg source={item.userImg}/>
+                {/* <UserImg source={{uri: item.userImg}}/> */}
                 <UserInfoText>
                     <UserName>{item.userName}</UserName>
-                    <PostTime>{moment(item.postTime.toDate()).fromNow()}</PostTime>
+                    {/* <PostTime>{moment(item.postTime.toDate()).fromNow()}</PostTime> */}
+                    <PostTime>{item.postTime}</PostTime>
                 </UserInfoText>
             </UserInfo>
         </UserInfo>
         <PostText>{item.post}</PostText>
-        {item.postImg != null ? <PostImg source={{uri: item.postImg}}/> : <Divider/>}
+        {/* {item.postImg != null ? <PostImg source={{uri: item.postImg}}/> : <Divider/>} */}
+         {item.postImg !== null ? <PostImg source={item.postImg}/> : <Divider/>}
 
         
         <InteractionWrapper>
@@ -63,11 +66,11 @@ const PostCard = ({item, onDelete}) => {
                 <Ionicons name="md-chatbubble-outline" size={25}/>
                 <InteractionText> {commentText}</InteractionText>
             </Interaction>
-            {user.uid == item.userId ? 
+            {/* {user.uid == item.userId ?  */}
             <Interaction onPress={ () => onDelete(item.id)}>
                 <Ionicons name="md-trash-bin-outline" size={25}/>
             </Interaction> 
-            : null}
+            {/*: null}*/}
         </InteractionWrapper>
     </Card>
      

@@ -82,12 +82,35 @@ const MessageScreen = ({navigation}) => {
    }, []);
 
     return (
-        <Container style={styles.container}>
-             {chats.map(({id, data: {chatName}}) => (
-                <MessageCard key={id} id={id} chatName={chatName} navigation={navigation} enterChat={enterChat}/>
-            ))}
+        // <Container style={styles.container}>
+        //      {chats.map(({id, data: {chatName}}) => (
+        //         <MessageCard key={id} id={id} chatName={chatName} navigation={navigation} enterChat={enterChat}/>
+        //     ))}
            
-        </Container>
+        // </Container>
+
+        <Container>
+        <FlatList 
+          data={Messages}
+          keyExtractor={item=>item.id}
+          renderItem={({item}) => (
+            <Card onPress={() => navigation.navigate('Chat', {userName: item.userName})}>
+              <UserInfo>
+                <UserImgWrapper>
+                  <UserImg source={item.userImg} />
+                </UserImgWrapper>
+                <TextSection>
+                  <UserInfoText>
+                    <UserName>{item.userName}</UserName>
+                    <PostTime>{item.messageTime}</PostTime>
+                  </UserInfoText>
+                  <MessageText>{item.messageText}</MessageText>
+                </TextSection>
+              </UserInfo>
+            </Card>
+          )}
+        />
+      </Container>
     )
 }
 

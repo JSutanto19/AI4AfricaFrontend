@@ -19,6 +19,7 @@ import ExploreScreen from '../screens/ExplorePage';
 import TranslateScreen from '../screens/TranslateScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ChatBotScreen from '../screens/ChatBotScreen';
+import SearchScreen from '../screens/Search'
 
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -328,6 +329,17 @@ const FeedStack = ({navigation}) => (
                   ), 
                 }}
               />
+
+              <Tab.Screen
+                name="Search"
+                component={SearchScreen}
+                options={{
+                  // tabBarLabel: 'Home',
+                  tabBarIcon: ({color, size}) => (
+                    <Ionicons name="search-outline" color={color} size={size} />
+                  ), 
+                }}
+              /> 
 
             
             </Tab.Navigator>

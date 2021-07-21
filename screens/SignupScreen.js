@@ -25,11 +25,12 @@ const SignupScreen = ({navigation}) => {
       firebase.auth()
       .createUserWithEmailAndPassword(email,password)
       .then((result) =>{
-        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(
-          email, password, name, country, city, phone
-        )
-      })
-      //.catch(error);
+        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
+          email, password, name, country, city, phone, chats, groups, id: firebase.auth().currentUser.uid
+
+        }
+      )
+      }).then(navigation.navigate("TabNav"))
     }
 
    return(
